@@ -2,9 +2,10 @@
 and allows the logged in user to view their account section of page whereby they can add their favourite movies from the list on page.
 No logout utility is added as that is beyond the scope of this very basic app! */
 
-// Hide account part of page by default (and account button on navbar)
+// Hide account and movies part of page by default (and account button on navbar)
 document.getElementById('account').style.display="none";
 document.getElementById('accBtn').style.display="none";
+document.getElementById('movies').style.display="none";
 
 // Create User blueprint class
 
@@ -29,6 +30,10 @@ class User {
 let kevin = new User(0, "kevink", "123");
 let joyce = new User(1, "joycetu", "321");
 
+// Create array to hold favourite movies
+let kevinFaves = [];
+let joyceFaves = [];
+
 // add to users usernames to storage arrays for later login checks
 const userNames = [kevin.getUsername(), joyce.getUsername()];
 const passwords = [kevin.getPassword(), joyce.getPassword()];
@@ -38,7 +43,7 @@ console.log(userNames);
 //     console.log(element.getUsername());
 // });
 
-document.getElementById("moviePanel").style.display="none";
+// document.getElementById("moviePanel").style.display="none";
 
 let userTxt, userPass;
 
@@ -65,6 +70,7 @@ checkLogin = (userN, passW) => {
             console.log("total match");
             document.getElementById('account').style.display="block";
             document.getElementById('accBtn').style.display="block";
+            document.getElementById('movies').style.display="block";
             document.getElementById('usernameHolder').textContent = userN;
             document.getElementById('passwordHolder').textContent = passW;
         } else {
@@ -79,3 +85,34 @@ checkLogin = (userN, passW) => {
     }
 
 }
+// Code to display favourites as they are being added
+
+addFave = (ev) => {
+    let node = document.createElement("LI");                 
+    let textnode = document.createTextNode(ev);
+    node.appendChild(textnode);                              
+    document.getElementById("movieLikes").appendChild(node);
+}
+
+const btnArray = document.querySelectorAll(".btn-primary");
+const buttons = Array.from(btnArray);
+buttons.forEach(el => {
+    el.addEventListener('click', function(event){
+
+        // disable the button after selecting the film to like
+        this.style.display = "none";
+        if(userTxt === "kevink") {
+            let choice = event.target.parentNode.firstChild.nextSibling.innerText;
+            kevinFaves.push(choice);
+            addFave(choice);
+        } else if (userTxt === "joycetu") {
+            let choice = event.target.parentNode.firstChild.nextSibling.innerText;
+            joyceFaves.push(choice);
+            addFave(choice);
+        }
+        
+    });
+});
+
+
+

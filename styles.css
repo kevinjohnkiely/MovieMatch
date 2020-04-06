@@ -47,3 +47,7 @@ html {
 #accBtn {
     font-weight: bold;
 }
+
+.spacer {
+    height: 20px;
+}
