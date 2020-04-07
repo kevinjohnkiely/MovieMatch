@@ -30,34 +30,25 @@ class User {
 let kevin = new User(0, "kevink", "123");
 let joyce = new User(1, "joycetu", "321");
 
-// Create array to hold favourite movies
-let kevinFaves = [];
+// Create array to hold favourite movies (Kevins hardcoded to ensure Joyce may find a match!)
+let kevinFaves = ["The Cider House Rules", "Despicable Me", "Bird Box", "The Beach", "Call Me By Your Name"];
 let joyceFaves = [];
 
 // add to users usernames to storage arrays for later login checks
 const userNames = [kevin.getUsername(), joyce.getUsername()];
 const passwords = [kevin.getPassword(), joyce.getPassword()];
-console.log(userNames);
-
-// users.forEach(element => {
-//     console.log(element.getUsername());
-// });
-
-// document.getElementById("moviePanel").style.display="none";
 
 let userTxt, userPass;
 
 document.getElementById("checklogin").addEventListener('click', function(){
     userTxt = document.getElementById("username").value;
     userPass = document.getElementById("password").value;
-    // console.log(userTxt + " and " + userPass);
     if(userTxt === "" || userPass === ""){
         alert("Please complete both username and password fields!");
     }
     else {
         checkLogin(userTxt, userPass);
     }
-    
     
 });
 
@@ -73,10 +64,11 @@ checkLogin = (userN, passW) => {
             document.getElementById('movies').style.display="block";
             document.getElementById('usernameHolder').textContent = userN;
             document.getElementById('passwordHolder').textContent = passW;
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
         } else {
             alert("Password is incorrect");
         }
-
 
     } else {
         document.getElementById("username").value = "";
@@ -92,6 +84,22 @@ addFave = (ev) => {
     let textnode = document.createTextNode(ev);
     node.appendChild(textnode);                              
     document.getElementById("movieLikes").appendChild(node);
+    
+}
+
+findMatch = () => {
+
+    let matchCounter = 0;
+    
+    for(let i = 0; i<kevinFaves.length; i ++) {
+        for (let j = 0; j<joyceFaves.length; j++){
+            if (kevinFaves[i] === joyceFaves[j]) {
+                matchCounter ++;
+                
+            }
+        }
+    }
+    return matchCounter;
 }
 
 const btnArray = document.querySelectorAll(".btn-primary");
@@ -102,13 +110,28 @@ buttons.forEach(el => {
         // disable the button after selecting the film to like
         this.style.display = "none";
         if(userTxt === "kevink") {
-            let choice = event.target.parentNode.firstChild.nextSibling.innerText;
-            kevinFaves.push(choice);
-            addFave(choice);
+
+            if(kevinFaves.length == 5){
+                alert("You have added 5 favorites, you cannot add anymore!");
+            } else {
+                let choice = event.target.parentNode.firstChild.nextSibling.innerText;
+                kevinFaves.push(choice);
+                addFave(choice);
+                // findMatch();
+            }
+            
         } else if (userTxt === "joycetu") {
-            let choice = event.target.parentNode.firstChild.nextSibling.innerText;
-            joyceFaves.push(choice);
-            addFave(choice);
+            if(joyceFaves.length == 5){
+                
+                alert("You have added 5 favorites, you cannot add anymore!");
+                
+            } else {
+                let choice = event.target.parentNode.firstChild.nextSibling.innerText;
+                joyceFaves.push(choice);
+                addFave(choice);
+                alert(`You have ${findMatch()} matches with Kevin!`);
+            }
+            
         }
         
     });
